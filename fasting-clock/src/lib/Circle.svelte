@@ -1,25 +1,26 @@
 <script>
-    export const currPerc = 0;
+    export const currPerc = 64;
 </script>
 
 <style>
-    .circle {
-        width: 10rem;
-        height: 10rem;
-        border-radius: 50%;
-        background-color: darkcyan;
-    }
+   .circle {
+    position: relative;
+    top: 0;
+    height: 30rem;
+    width: 30rem;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: darkcyan;
+   }
 
-    .fill {
-        fill: none;
-        stroke: purple;
-        stroke-width: 10;
-    }
-
+   .overlay {
+    position: absolute;
+    bottom: 0.01px;
+    width: 100%;
+    background-color: purple;
+   }
 </style>
 
 <div class="circle">
-    <svg viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="45" class="fill"/>
-    </svg>
+    <div class="overlay" style="height: {currPerc}%"></div>
 </div>
