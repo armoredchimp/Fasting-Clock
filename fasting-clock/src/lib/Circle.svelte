@@ -1,5 +1,8 @@
 <script>
-    export const currPerc = 64;
+    
+    import LengthInput from './LengthInput.svelte';
+    export let currPerc = 40;
+
 </script>
 
 <style>
