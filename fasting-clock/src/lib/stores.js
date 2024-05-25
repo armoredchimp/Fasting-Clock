@@ -1,3 +1,6 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
 
-export const fastStart = writable(0);
+export const hours = writable(12);
+export const currPerc = writable(50);
+
+// export const displayPerc = derived(currPerc, ($currPerc) => $currPerc * 4);

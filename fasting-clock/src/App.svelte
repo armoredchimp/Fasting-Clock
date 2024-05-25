@@ -5,17 +5,17 @@
 </script>
 
 <style>
- 
+    
 </style>
 
-<div>
+<div style:margin="0 auto" style:max-width="40rem">
     <h1 style:margin-left="8.5rem" style:margin-bottom="3rem">Fasting Clock</h1>
     <Circle 
     
         
     />
     <div style:margin-top="5rem" style:margin-left="3rem">
-        <LengthInput length={14}/>
+        <LengthInput length={12}/>
     </div>    
 </div>
 
