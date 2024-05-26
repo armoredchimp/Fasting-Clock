@@ -35,7 +35,7 @@
 
    .clock {
     position: absolute;
-    top: 12rem;
+    top: 10rem;
     left: 8rem;
     z-index: 0;
 

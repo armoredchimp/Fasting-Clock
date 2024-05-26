@@ -8,6 +8,8 @@
 
     let amPM = 'AM';
 
+    $: mainHour = hour - 12
+
     onMount( ()=>{
         const interval = setInterval(()=>{
             date = new Date();
@@ -23,4 +25,4 @@
     } */
 </style>
 
-<h1>{hour - 12} : {min} : {sec} {amPM}</h1>
+<h1>{(mainHour < 10 ? '\u00A0\u00A0' + mainHour : mainHour) === 0 ? 12 : (mainHour < 10 ? '\u00A0\u00A0' + mainHour : mainHour)} : {min < 10 ? '0' + min : min} : {sec < 10 ? '0' + sec : sec} {amPM}</h1>
