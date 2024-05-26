@@ -1,9 +1,11 @@
 <script>
     
-    import { hours, futureDate } from './stores'
+    import { hours, futureDate, hasStarted } from './stores'
+    import { createEventDispatcher } from 'svelte';
+
+    const dispatch = createEventDispatcher();
 
     let hoursRead = 0;
-    // let futureRead = new Date()
     let end = new Date()
 
     function getHours(){
@@ -16,8 +18,10 @@
         end = new Date(now.getTime() + hoursRead * 60 * 60 * 1000) 
         futureDate.update((n)=> n = end)
         console.log(end)
-        // futureDate.update((n)=> futureRead = n)
-        // console.log(futureRead)
+        hasStarted.update((n)=>n = true)
+        dispatch('started',{
+            now: now
+        })
     }
 
 </script>

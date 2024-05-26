@@ -1,17 +1,20 @@
 <script>
     
     
-    import { currPerc } from './stores';
+    import { currPerc, hasStarted } from './stores';
     import Clock from './Clock.svelte';
     import TargetClock from './TargetClock.svelte';
+
     let currPerc_value = 50;
+    let startedGate = false;
 
     currPerc.subscribe((value)=>{
         currPerc_value = value;
     })
 
-
-
+    hasStarted.subscribe((value)=>{
+        startedGate = value;
+    })
 </script>
 
 <style>
@@ -46,6 +49,7 @@
     left: 8rem;
     z-index: 0;
    }
+ 
 </style>
 
 <div class="circle">
@@ -53,7 +57,13 @@
     <div class="clock" >
         <Clock />
     </div>
+    {#if startedGate === false}
     <div class="target-clock" >
         <TargetClock />
     </div>
+    {:else}
+    <div class="target-clock">
+        <h1>{currPerc_value} % remaining</h1>
+    </div>
+    {/if}
 </div>

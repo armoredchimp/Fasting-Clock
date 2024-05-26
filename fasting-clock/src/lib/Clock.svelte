@@ -8,7 +8,7 @@
 
     let amPM = 'AM';
 
-    $: mainHour = hour - 12
+    $: mainHour = (hour >= 12) ? hour - 12 : hour
 
     onMount( ()=>{
         const interval = setInterval(()=>{
