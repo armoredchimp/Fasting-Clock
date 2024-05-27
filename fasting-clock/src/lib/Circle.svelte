@@ -1,12 +1,22 @@
 <script>
     
     
-    import { currPerc, hasStarted } from './stores';
+    import { hours, futureDate, currPerc, hasStarted } from './stores';
     import Clock from './Clock.svelte';
     import TargetClock from './TargetClock.svelte';
+	import { onMount } from 'svelte';
+	
 
+    let hours_value = 12;
     let currPerc_value = 50;
     let startedGate = false;
+    let totalDuration = 0;
+    let remainingTime = 0;
+    let end = new Date()
+
+    hours.subscribe((value)=>{
+        hours_value = value
+    })
 
     currPerc.subscribe((value)=>{
         currPerc_value = value;
@@ -15,6 +25,25 @@
     hasStarted.subscribe((value)=>{
         startedGate = value;
     })
+
+    function calcRemPerc(){
+        let currentTime = new Date();
+        totalDuration = hours_value * 60 * 60 * 1000;
+        futureDate.update((n)=>end = n);
+        remainingTime = end.getTime() - currentTime.getTime()
+        currPerc.update((n)=>n = (remainingTime / totalDuration) * 100)
+    }
+
+    
+
+    onMount(()=>{
+        if(startedGate === true){
+        const interval = setInterval(()=>{
+            calcRemPerc()
+        }, 1000);
+        }
+    }
+    )
 </script>
 
 <style>
@@ -38,32 +67,39 @@
 
    .clock {
     position: absolute;
-    top: 10rem;
-    left: 8rem;
+    top: 4rem;
+    left: 7.5rem;
     z-index: 0;
 
 }
    .target-clock {
     position: absolute;
-    top: 16rem;
-    left: 8rem;
+    top: 15.5rem;
+    left: 7.5rem;
     z-index: 0;
+   }
+
+   .perc {
+    position: absolute;
+    top: 13rem;
+    left: 7.5rem;
    }
  
 </style>
 
 <div class="circle">
     <div class="overlay" style="height: {currPerc_value}%; transition: 0.1s ease-in"></div>
+    {#if startedGate === false}
     <div class="clock" >
         <Clock />
     </div>
-    {#if startedGate === false}
     <div class="target-clock" >
         <TargetClock />
     </div>
     {:else}
-    <div class="target-clock">
-        <h1>{currPerc_value} % remaining</h1>
+    <div class="perc">
+        <h1>{currPerc_value.toFixed(2)} % remaining</h1>
     </div>
     {/if}
+
 </div>

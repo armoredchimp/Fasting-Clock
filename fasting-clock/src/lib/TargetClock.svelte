@@ -30,4 +30,5 @@
     })
 </script>
 
+<h3>Ending Time:</h3>
 <h1>{(currHour === 0 ? 12 : currHour) < 10 ? '\u00A0\u00A0' + (currHour === 0 ? 12 : currHour) : (currHour === 0 ? 12 : currHour)} : {min < 10 ? '0' + min : min} : {sec < 10 ? '0' + sec : sec} {amPM2}</h1>

@@ -25,4 +25,5 @@
     } */
 </style>
 
-<h1>{(mainHour < 10 ? '\u00A0\u00A0' + mainHour : mainHour) === 0 ? 12 : (mainHour < 10 ? '\u00A0\u00A0' + mainHour : mainHour)} : {min < 10 ? '0' + min : min} : {sec < 10 ? '0' + sec : sec} {amPM}</h1>
+<h3>Current Time:</h3>
+<h1>{(mainHour === 0 ? 12 : mainHour) < 10 ? '\u00A0\u00A0' + (mainHour === 0 ? 12 : mainHour) : (mainHour === 0 ? 12 : mainHour)} : {min < 10 ? '0' + min : min} : {sec < 10 ? '0' + sec : sec} {amPM}</h1>
