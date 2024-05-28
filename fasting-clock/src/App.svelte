@@ -1,8 +1,9 @@
 <script>
-    import { onMount } from "svelte";
+    import { afterUpdate } from "svelte";
     import Circle from "./lib/Circle.svelte";
     import LengthInput from "./lib/LengthInput.svelte";
     import Start from "./lib/Start.svelte";
+    import Stop from "./lib/Stop.svelte";
     import { hours, currPerc, futureDate, hasStarted } from './lib/stores';
 
     let startedApp = false;
@@ -12,28 +13,41 @@
     let remainingApp = 0;
     let hrs = 0;
     let mins = 0;
-    futureDate.subscribe((n)=> ending = n)
+    
     hours.subscribe((n)=> hoursApp = n)
     hasStarted.subscribe((n)=> startedApp = n)
 
-    let endingDisplay = ending.toLocaleString();
+    let endingDisplay = ''
 
     function handleStart(){
         console.log('start received')
+        futureDate.update((n)=> ending = n)
+        endingDisplay = ending.toLocaleString()
         currPerc.update((n)=> n = 100)
+        calcRemTime()
+    }
+
+    function handleStop(){
+        console.log('stop received')
+        currPerc.update((n)=> n = 50)
     }
   
     function calcRemTime(){
+        if( startedApp === true){
+        console.log(`started: ${startedApp}`)
         let currentTime = new Date();
         totalApp = hoursApp * 60 * 60 * 1000;
+        console.log(`total: ${totalApp}`)
         remainingApp = ending.getTime() - currentTime.getTime()
+        console.log(`remaining: ${remainingApp}`)
         hrs = Math.floor(remainingApp / (1000 * 60 * 60))
         mins = Math.floor(remainingApp % (1000 * 60 * 60) / (1000 * 60))
     }
+}
 
-    onMount(()=>{
+    afterUpdate(()=>{
         if(startedApp === true){
-        const interval = setInterval(()=>{
+        setInterval(()=>{
             calcRemTime()
         }, 1000);
         }
@@ -56,14 +70,15 @@
     <div style:position="absolute" style:right="-15rem" style:top="18rem">
         <Start on:started={handleStart}/>    
         </div>
-    <div style:margin-top="5rem" style:margin-left="3rem">
+    <div style:margin-top="5rem" style:margin-left="4rem">
         <LengthInput/>
     </div>
     {:else}
-    <div style:margin-top="5rem" style:margin-left="2rem">
+    <div style:margin-top="5rem" style:margin-left="3rem">
         <p>There is currently {hrs} hours and {mins} minutes left for the fast.</p>
         <p>The fast will end at {endingDisplay}.</p>
     </div>
+        <Stop on:stopped={handleStop}/>
     {/if}
 </div>
 

@@ -5,7 +5,7 @@
 
     const dispatch = createEventDispatcher();
 
-    let hoursRead = 0;
+    let hoursRead = 12;
     let end = new Date()
 
     function getHours(){
