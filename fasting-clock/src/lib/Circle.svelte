@@ -4,7 +4,7 @@
     import { hours, futureDate, currPerc, hasStarted } from './stores';
     import Clock from './Clock.svelte';
     import TargetClock from './TargetClock.svelte';
-	import { onMount } from 'svelte';
+	import { afterUpdate } from 'svelte';
 	
 
     let hours_value = 12;
@@ -27,18 +27,20 @@
     })
 
     function calcRemPerc(){
+        if(startedGate === true){
         let currentTime = new Date();
         totalDuration = hours_value * 60 * 60 * 1000;
         futureDate.update((n)=>end = n);
         remainingTime = end.getTime() - currentTime.getTime()
         currPerc.update((n)=>n = (remainingTime / totalDuration) * 100)
     }
+}
 
     
 
-    onMount(()=>{
+    afterUpdate(()=>{
         if(startedGate === true){
-        const interval = setInterval(()=>{
+        setInterval(()=>{
             calcRemPerc()
         }, 1000);
         }

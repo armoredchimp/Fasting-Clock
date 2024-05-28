@@ -34,12 +34,9 @@
   
     function calcRemTime(){
         if( startedApp === true){
-        console.log(`started: ${startedApp}`)
         let currentTime = new Date();
         totalApp = hoursApp * 60 * 60 * 1000;
-        console.log(`total: ${totalApp}`)
         remainingApp = ending.getTime() - currentTime.getTime()
-        console.log(`remaining: ${remainingApp}`)
         hrs = Math.floor(remainingApp / (1000 * 60 * 60))
         mins = Math.floor(remainingApp % (1000 * 60 * 60) / (1000 * 60))
     }
