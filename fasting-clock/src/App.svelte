@@ -4,24 +4,29 @@
     import LengthInput from "./lib/LengthInput.svelte";
     import Start from "./lib/Start.svelte";
     import Stop from "./lib/Stop.svelte";
-    import { hours, currPerc, futureDate, hasStarted } from './lib/stores';
+    import { hours, currPerc, startDate, futureDate, hasStarted } from './lib/stores';
 
     let startedApp = false;
     let hoursApp = 0;
     let totalApp = 0;
+    let start = new Date();
     let ending = new Date();
     let remainingApp = 0;
     let hrs = 0;
     let mins = 0;
+    let succeeded = false;
     
     hours.subscribe((n)=> hoursApp = n)
     hasStarted.subscribe((n)=> startedApp = n)
 
+    let startDisplay = ''
     let endingDisplay = ''
 
     function handleStart(){
         console.log('start received')
+        startDate.update((n)=> start = n)
         futureDate.update((n)=> ending = n)
+        startDisplay = start.toLocaleString()
         endingDisplay = ending.toLocaleString()
         currPerc.update((n)=> n = 100)
         calcRemTime()
@@ -37,10 +42,21 @@
         let currentTime = new Date();
         totalApp = hoursApp * 60 * 60 * 1000;
         remainingApp = ending.getTime() - currentTime.getTime()
+        if(remainingApp === 0){
+            success()
+            return;
+        }
         hrs = Math.floor(remainingApp / (1000 * 60 * 60))
         mins = Math.floor(remainingApp % (1000 * 60 * 60) / (1000 * 60))
     }
 }
+
+    function success(){
+        startedApp = false;
+        hasStarted.update((n)=> n = false)
+        currPerc.update((n)=> n = 0)
+        succeeded = true;
+    }
 
     afterUpdate(()=>{
         if(startedApp === true){
@@ -70,12 +86,17 @@
     <div style:margin-top="5rem" style:margin-left="4rem">
         <LengthInput/>
     </div>
-    {:else}
+    {:else if succeeded === false}
     <div style:margin-top="5rem" style:margin-left="3rem">
         <p>There is currently {hrs} hours and {mins} minutes left for the fast.</p>
         <p>The fast will end at {endingDisplay}.</p>
     </div>
         <Stop on:stopped={handleStop}/>
+    {:else if succeeded === true}
+    <div style:margin-top="5rem" style:margin-left="3rem">
+        <p>The fast has been completed, good job!</p>
+        <p>The fast started at {startDisplay}.</p>
+    </div>    
     {/if}
 </div>
 
