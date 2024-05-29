@@ -1,10 +1,12 @@
 <script>
+    import axios from "axios";
     import { afterUpdate } from "svelte";
     import Circle from "./lib/Circle.svelte";
     import LengthInput from "./lib/LengthInput.svelte";
     import Start from "./lib/Start.svelte";
     import Stop from "./lib/Stop.svelte";
     import { hours, currPerc, startDate, futureDate, hasStarted } from './lib/stores';
+    import { aws_stages } from "./aws/stages";
 
     let startedApp = false;
     let hoursApp = 0;
@@ -24,11 +26,14 @@
 
     function handleStart(){
         console.log('start received')
+        totalApp = hoursApp * 60 * 60 * 1000;
         startDate.update((n)=> start = n)
         futureDate.update((n)=> ending = n)
         startDisplay = start.toLocaleString()
         endingDisplay = ending.toLocaleString()
         currPerc.update((n)=> n = 100)
+        
+        putFast()
         calcRemTime()
     }
 
@@ -40,7 +45,7 @@
     function calcRemTime(){
         if( startedApp === true){
         let currentTime = new Date();
-        totalApp = hoursApp * 60 * 60 * 1000;
+        
         remainingApp = ending.getTime() - currentTime.getTime()
         if(remainingApp === 0){
             success()
@@ -66,6 +71,28 @@
         }
     }
     )
+
+    async function putFast(){
+        let url = aws_stages.API_PUT_URL.replace('{UserID}', '2')
+        let data = {
+            "pathParameters": {
+                "UserID": 2,
+                "StartDate": start.getTime(),
+                "EndDate": ending.getTime(),
+                "InProgress": true,
+                "PercentCompleted": 0,
+                "TotalDuration": hoursApp 
+            }
+        }
+        axios.put(url, data)
+        .then(response =>{
+            console.log(response.data)
+        })
+        .catch(error=> {
+            console.error(`Error: ${error}`)
+        });
+    }
+
 
 </script>
 

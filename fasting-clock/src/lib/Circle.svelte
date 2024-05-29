@@ -32,8 +32,10 @@
         totalDuration = hours_value * 60 * 60 * 1000;
         futureDate.update((n)=>end = n);
         remainingTime = end.getTime() - currentTime.getTime()
+        if(remainingTime > 0){
         currPerc.update((n)=>n = (remainingTime / totalDuration) * 100)
     }
+}   
 }
 
     
