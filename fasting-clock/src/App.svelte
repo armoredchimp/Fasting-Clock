@@ -24,6 +24,10 @@
     let startDisplay = ''
     let endingDisplay = ''
 
+    function randomNumber(){
+        return Math.floor(Math.random() * (1000000 -10000) + 10000)
+    }
+
     function handleStart(){
         console.log('start received')
         totalApp = hoursApp * 60 * 60 * 1000;
@@ -73,10 +77,10 @@
     )
 
     async function putFast(){
-        let url = aws_stages.API_PUT_URL.replace('{UserID}', '2')
         let data = {
             "pathParameters": {
-                "UserID": 2,
+                "FastID": randomNumber(),
+                "UserID": "Matt",
                 "StartDate": start.getTime(),
                 "EndDate": ending.getTime(),
                 "InProgress": true,
@@ -84,6 +88,8 @@
                 "TotalDuration": hoursApp 
             }
         }
+        let url = aws_stages.API_PUT_URL
+        console.log(data)
         axios.put(url, data)
         .then(response =>{
             console.log(response.data)
