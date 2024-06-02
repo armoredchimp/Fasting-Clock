@@ -1,7 +1,7 @@
 <script>
     
     
-    import { hours, futureDate, currPerc, hasStarted } from './stores';
+    import { hours, futureDate, currPerc, hasStarted, remSeconds } from './stores';
     import Clock from './Clock.svelte';
     import TargetClock from './TargetClock.svelte';
 	import { afterUpdate } from 'svelte';
@@ -18,6 +18,7 @@
         currPerc_value = value;
     })
 
+   
 
 
     function calcRemPerc(){
@@ -97,6 +98,7 @@
     {:else}
     <div class="perc">
         <h1>{currPerc_value.toFixed(2)} % remaining</h1>
+        <h2>{$remSeconds} {$remSeconds === 1 ? 'second' : 'seconds'} remain</h2>
     </div>
     {/if}
 

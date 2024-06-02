@@ -5,7 +5,7 @@
     import LengthInput from "./lib/LengthInput.svelte";
     import Start from "./lib/Start.svelte";
     import Stop from "./lib/Stop.svelte";
-    import { hours, currPerc, startDate, futureDate, hasStarted, fastID } from './lib/stores';
+    import { hours, currPerc, startDate, futureDate, hasStarted, fastID, remHours, remMins, remSeconds } from './lib/stores';
     import { aws_stages } from "./aws/stages";
 
     let startedApp = false;
@@ -13,9 +13,9 @@
     let totalApp = 0;
     let start = new Date();
     let ending = new Date();
-    let remainingApp = 0;
-    let hrs = 0;
-    let mins = 0;
+    
+    
+  
     let succeeded = false;
     
     hours.subscribe((n)=> hoursApp = n)
@@ -32,7 +32,6 @@
     })
         
 
-    
   
     function randomNumber(){
         return Math.floor(Math.random() * (1000000 -10000) + 10000)
@@ -47,7 +46,7 @@
         endingDisplay = ending.toLocaleString()
         $currPerc = 100;
         
-        putFast()
+        // putFast()
         calcRemTime()
     }
 
@@ -58,15 +57,9 @@
   
     function calcRemTime(){
         if( startedApp === true){
-        let currentTime = new Date();
-        
-        remainingApp = ending.getTime() - currentTime.getTime()
-        if(remainingApp === 0){
-            success()
-            return;
-        }
-        hrs = Math.floor(remainingApp / (1000 * 60 * 60))
-        mins = Math.floor(remainingApp % (1000 * 60 * 60) / (1000 * 60))
+            if($remSeconds === 0){
+                success()
+            }
     }
 }
 
@@ -132,7 +125,7 @@
     </div>
     {:else if succeeded === false}
     <div style:margin-top="5rem" style:margin-left="3rem">
-        <p>There is currently {hrs} hours and {mins} minutes left for the fast.</p>
+        <p>There is currently {$remHours} {$remHours === 1 ? 'hour' : 'hours'} and {$remMins % 60} {$remMins === 1 ? 'minute' : 'minutes'} left for the fast.</p>
         <p>The fast will end at {endingDisplay}.</p>
     </div>
         <Stop on:stopped={handleStop}/>
