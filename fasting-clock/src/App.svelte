@@ -1,11 +1,11 @@
 <script>
     import axios from "axios";
-    import { afterUpdate } from "svelte";
+    import { onMount, afterUpdate } from "svelte";
     import Circle from "./lib/Circle.svelte";
     import LengthInput from "./lib/LengthInput.svelte";
     import Start from "./lib/Start.svelte";
     import Stop from "./lib/Stop.svelte";
-    import { hours, currPerc, startDate, futureDate, hasStarted } from './lib/stores';
+    import { hours, currPerc, startDate, futureDate, hasStarted, fastID } from './lib/stores';
     import { aws_stages } from "./aws/stages";
 
     let startedApp = false;
@@ -24,6 +24,16 @@
     let startDisplay = ''
     let endingDisplay = ''
 
+    onMount(()=>{
+        if($fastID === 0){
+            $fastID = randomNumber()
+        }
+        console.log($fastID)
+    })
+        
+
+    
+  
     function randomNumber(){
         return Math.floor(Math.random() * (1000000 -10000) + 10000)
     }
@@ -35,7 +45,7 @@
         futureDate.update((n)=> ending = n)
         startDisplay = start.toLocaleString()
         endingDisplay = ending.toLocaleString()
-        currPerc.update((n)=> n = 100)
+        $currPerc = 100;
         
         putFast()
         calcRemTime()
@@ -43,7 +53,7 @@
 
     function handleStop(){
         console.log('stop received')
-        currPerc.update((n)=> n = 50)
+        $currPerc = 50;
     }
   
     function calcRemTime(){
@@ -62,13 +72,14 @@
 
     function success(){
         startedApp = false;
-        hasStarted.update((n)=> n = false)
-        currPerc.update((n)=> n = 0)
+        $hasStarted = false;
+        $currPerc = 0;
         succeeded = true;
+        putFast()
     }
 
     afterUpdate(()=>{
-        if(startedApp === true){
+        if($hasStarted === true){
         setInterval(()=>{
             calcRemTime()
         }, 1000);
@@ -79,12 +90,12 @@
     async function putFast(){
         let data = {
             "pathParameters": {
-                "FastID": randomNumber(),
+                "FastID": $fastID,
                 "UserID": "Matt",
                 "StartDate": start.getTime(),
                 "EndDate": ending.getTime(),
                 "InProgress": true,
-                "PercentCompleted": 0,
+                "PercentCompleted": succeeded ? 100 : 0,
                 "TotalDuration": hoursApp 
             }
         }

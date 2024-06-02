@@ -7,29 +7,23 @@
 	import { afterUpdate } from 'svelte';
 	
 
-    let hours_value = 12;
     let currPerc_value = 50;
-    let startedGate = false;
     let totalDuration = 0;
     let remainingTime = 0;
     let end = new Date()
 
-    hours.subscribe((value)=>{
-        hours_value = value
-    })
+  
 
     currPerc.subscribe((value)=>{
         currPerc_value = value;
     })
 
-    hasStarted.subscribe((value)=>{
-        startedGate = value;
-    })
+
 
     function calcRemPerc(){
-        if(startedGate === true){
+        if($hasStarted === true){
         let currentTime = new Date();
-        totalDuration = hours_value * 60 * 60 * 1000;
+        totalDuration = $hours * 60 * 60 * 1000;
         futureDate.update((n)=>end = n);
         remainingTime = end.getTime() - currentTime.getTime()
         if(remainingTime > 0){
@@ -41,7 +35,7 @@
     
 
     afterUpdate(()=>{
-        if(startedGate === true){
+        if($hasStarted === true){
         setInterval(()=>{
             calcRemPerc()
         }, 1000);
@@ -93,7 +87,7 @@
 
 <div class="circle">
     <div class="overlay" style="height: {currPerc_value}%; transition: 0.1s ease-in"></div>
-    {#if startedGate === false}
+    {#if $hasStarted === false}
     <div class="clock" >
         <Clock />
     </div>

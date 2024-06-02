@@ -3,9 +3,7 @@
     import { hours, currPerc } from "./stores";
 
     let length = 12;
-    let hoursDisplay = 12;
-
-    hours.subscribe((n)=> hoursDisplay = n)
+    
 
     function displayPerc(){
         currPerc.update((n)=> length * 4.2)       
@@ -26,7 +24,7 @@
     <input type="range" bind:value={length} on:input={displayPerc} on:input={hoursChange} min="12" max="24" />
 </label>
 {#if length === 24}
-<p>The fast will be for {hoursDisplay} hours!</p>
+<p>The fast will be for {$hours} hours!</p>
 {:else}
-<p>The fast will be for {hoursDisplay} hours.</p>
+<p>The fast will be for {$hours} hours.</p>
 {/if}
