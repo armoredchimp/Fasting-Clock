@@ -1,16 +1,15 @@
 <script>
     
     
-    import { hours, futureDate, currPerc, hasStarted, remSeconds } from './stores';
+    import { totalDuration, futureDate, currPerc, hasStarted, remSeconds, succeeded } from './stores';
     import Clock from './Clock.svelte';
     import TargetClock from './TargetClock.svelte';
 	import { afterUpdate } from 'svelte';
 	
 
     let currPerc_value = 50;
-    let totalDuration = 0;
     let remainingTime = 0;
-    let end = new Date()
+    // let end = new Date()
 
   
 
@@ -24,11 +23,10 @@
     function calcRemPerc(){
         if($hasStarted === true){
         let currentTime = new Date();
-        totalDuration = $hours * 60 * 60 * 1000;
-        futureDate.update((n)=>end = n);
-        remainingTime = end.getTime() - currentTime.getTime()
+        // futureDate.update((n)=>end = n);
+        remainingTime = $futureDate.getTime() - currentTime.getTime()
         if(remainingTime > 0){
-        currPerc.update((n)=>n = (remainingTime / totalDuration) * 100)
+        currPerc.update((n)=>n = (remainingTime / $totalDuration) * 100)
     }
 }   
 }
@@ -88,17 +86,21 @@
 
 <div class="circle">
     <div class="overlay" style="height: {currPerc_value}%; transition: 0.1s ease-in"></div>
-    {#if $hasStarted === false}
+    {#if $hasStarted === false && $succeeded === false}
     <div class="clock" >
         <Clock />
     </div>
     <div class="target-clock" >
         <TargetClock />
     </div>
-    {:else}
+    {:else if $remSeconds > 0}
     <div class="perc">
         <h1>{currPerc_value.toFixed(2)} % remaining</h1>
         <h2>{$remSeconds} {$remSeconds === 1 ? 'second' : 'seconds'} remain</h2>
+    </div>
+    {:else}
+    <div class="perc">
+        <h1>{currPerc_value.toFixed(2)} % remaining</h1>
     </div>
     {/if}
 

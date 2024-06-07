@@ -5,6 +5,7 @@ export const currPerc = writable(50);
 export const startDate = writable(new Date());
 export const futureDate = writable(new Date());
 export const hasStarted = writable(false);
+export const succeeded = writable(false);
 export const fastID = writable(0);
 
 export const time = readable(new Date(), function start(set) {
@@ -16,6 +17,13 @@ export const time = readable(new Date(), function start(set) {
 		clearInterval(interval);
 	};
 });
+
+export const futureDisplay = derived(
+	[time, hours],
+	([$time, $hours]) => $time.getTime() + $hours * 60 * 60 * 1000
+);
+
+export const totalDuration = derived(hours, ($hours) => $hours * 60 * 60 * 1000);
 
 export const remHours = derived([time, futureDate], ([$time, $futureDate]) =>
 	Math.floor(($futureDate - $time) / 1000 / 3600)
